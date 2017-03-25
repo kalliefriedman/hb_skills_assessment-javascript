@@ -185,30 +185,41 @@ $(animalPic).on('dblclick', changePic);
 
 <script>
   "use strict";
+
+var randomNumber;
+
 function gameStart () {
-  $('#play-guessing-game').attr('disabled',true);
-  $('#number-guessed').attr('disabled',false);
-  $('#try-this-number').attr('disabled',false);
-
-  var randomNumber = Math.floor(Math.random() * 100) + 1;
-  $('#number-guessing-msg').html("Guess a number")
-  var userGuess = $('#try-this-number').val()
-  while (userGuess != randomNumber) {
-    if (userGuess > randomNumber) {
-      $('#number-guessing-msg').html("Your guess is too high")
-    } 
-    else { 
-      $('#number-guessing-msg').html("Your number is too low")
-    }
-  }
-  $('#number-guessing-msg').html("Congrats! You guessed correctly!")
-  $('#try-this-number').attr('disabled',true);
-  $('#play-guessing-game').attr('disabled',false);
-
+    event.preventDefault();
+    $('#play-guessing-game').attr('disabled',true);
+    $('#number-guessed').attr('disabled',false);
+    $('#try-this-number').attr('disabled',false);
+    $('#number-guessed').val("");
+    randomNumber = Math.floor(Math.random() * 100) + 1;
+    console.log(randomNumber)
+    $('#number-guessing-msg').placeholder("Guess");
 }
-                            
-
 $('#play-guessing-game').on('click', gameStart);
+
+  
+$("#guessing-game-form").submit(function(event) {
+    event.preventDefault();
+    var userGuess = $('#number-guessed').val();
+    console.log(userGuess)
+    userGuess= Number(userGuess)
+    if (userGuess === randomNumber) {
+        $('#number-guessing-msg').html("Congrats! You guessed correctly!");
+        $('#try-this-number').attr('disabled',true);
+        $('#play-guessing-game').attr('disabled',false);
+    }
+    else if (userGuess > randomNumber) {
+        $('#number-guessing-msg').html("Your guess is too high");
+        } 
+    else { 
+        $('#number-guessing-msg').html("Your number is too low");
+        }
+    
+})
+
 
 </script>
 
@@ -275,9 +286,23 @@ $('#play-guessing-game').on('click', gameStart);
     $("#t-rex-img").append(tRexPhoto);
   }
 
-  // put your code here
+
+function processForm(evt) {
+    
+    evt.preventDefault();
+
+    var formInputs = {
+    "person":  $('#attack-target').val()};  
+    
+    $.post("/t-rex-attack.json", formInputs, showTRexResults);
+
+};
+
+$("#t-rex-form").on("submit", processForm);
 
 </script>
+
+
 
 <div class="hint">
   <div>
